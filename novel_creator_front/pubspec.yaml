@@ -13,7 +13,8 @@ dependencies:
     sdk: flutter
 
   http: ^0.13.5
-  get: 4.6.6
+  get: ^4.6.6
+  sidebarx: ^0.16.2
 
   cupertino_icons: ^1.0.2
 
