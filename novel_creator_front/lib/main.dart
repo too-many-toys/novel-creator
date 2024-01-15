@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:novel_creator_front/write_novel.dart';
 import 'package:sidebarx/sidebarx.dart';
+import 'package:novel_creator_front/src/rust/frb_generated.dart';
 
-void main() {
+Future<void> main() async {
+  await RustLib.init();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(NovelCreator());
