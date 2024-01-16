@@ -24,6 +24,7 @@ class NovelCreator extends StatelessWidget {
       title: 'Novel Creator',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        fontFamily: 'appFont',
         primaryColor: primaryColor,
         canvasColor: canvasColor,
         scaffoldBackgroundColor: scaffoldBackgroundColor,
@@ -59,6 +60,9 @@ class NovelCreator extends StatelessWidget {
             body: Row(
               children: [
                 if (!isSmallScreen) Sidebar(controller: _controller),
+                const SizedBox(
+                  width: 40,
+                ),
                 Expanded(
                   child: Center(
                     child: _ScreensExample(
@@ -66,6 +70,9 @@ class NovelCreator extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(
+                  width: 40,
+                )
               ],
             ),
           );
@@ -144,20 +151,20 @@ class Sidebar extends StatelessWidget {
       },
       items: const [
         SidebarXItem(
-          icon: Icons.home,
-          label: 'Home',
+          icon: Icons.edit,
+          label: '소설 쓰기',
         ),
         SidebarXItem(
-          icon: Icons.search,
-          label: 'Search',
+          icon: Icons.groups,
+          label: '인물 관계도',
         ),
         SidebarXItem(
-          icon: Icons.people,
-          label: 'People',
+          icon: Icons.note_add,
+          label: '스토리 관계도',
         ),
         SidebarXItem(
           icon: Icons.favorite,
-          label: 'Favorites',
+          label: '전체?',
         ),
       ],
     );
@@ -196,13 +203,13 @@ class _ScreensExample extends StatelessWidget {
 String _getTitleByIndex(int index) {
   switch (index) {
     case 0:
-      return 'Home';
+      return '소설 쓰기';
     case 1:
-      return 'Search';
+      return '인물 관계도';
     case 2:
-      return 'People';
+      return '스토리 관계도';
     case 3:
-      return 'Favorites';
+      return '전체?';
     default:
       return 'Not found page';
   }
