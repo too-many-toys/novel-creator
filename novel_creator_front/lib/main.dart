@@ -9,6 +9,8 @@ Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
+  Get.put(WriteNovelController());
+
   runApp(NovelCreator());
 }
 
