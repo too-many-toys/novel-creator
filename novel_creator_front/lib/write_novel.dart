@@ -18,97 +18,114 @@ class WriteNovel extends GetView<WriteNovelController> {
       // print(_contentCon.selection.textInside(_contentCon.text));
     });
 
-    return Obx(() => Column(
+    return Column(
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        Row(
           children: [
+            FloatingActionButton(onPressed: () => {}),
             const SizedBox(
-              height: 20,
+              width: 2,
             ),
-            Row(
-              children: [
-                FloatingActionButton(onPressed: () => {}),
-                const SizedBox(
-                  width: 2,
-                ),
-                FloatingActionButton(onPressed: () => {})
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: Row(
+            FloatingActionButton(onPressed: () => {})
+          ],
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Expanded(
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                  child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                      child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        color: Colors.white,
-                        child: TextField(
-                            maxLines: 1,
-                            onChanged: (value) {
-                              controller.titleText = value.obs;
-                            },
-                            controller: controller.titleCon.value,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: '제목',
-                            )),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Expanded(
-                          child: Container(
-                        color: Colors.white,
-                        child: TextField(
-                            maxLines: null,
-                            onChanged: (value) {
-                              controller.contentText.value = value;
-                            },
-                            controller: controller.contentCon.value,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: '내용',
-                            )),
-                      )),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                    ],
-                  )),
+                  Container(
+                    color: Colors.white,
+                    child: TextField(
+                        maxLines: 1,
+                        onChanged: (value) {
+                          controller.updateTitleText(value);
+                        },
+                        controller: controller.titleCon.value,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '제목',
+                        )),
+                  ),
                   const SizedBox(
-                    width: 20,
+                    height: 5,
                   ),
                   Expanded(
-                      child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                          color: Colors.white,
-                          child: Text(
-                            "${controller.titleText}",
-                          )),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Expanded(
-                          child: Container(
-                              color: Colors.white,
-                              child: Text(controller.contentText.value,
-                                  style: const TextStyle(
-                                      fontSize: 20, color: Colors.black))))
-                    ],
+                      child: Container(
+                    color: Colors.white,
+                    child: TextField(
+                        maxLines: null,
+                        onChanged: (value) {
+                          controller.updateContentText(value);
+                        },
+                        controller: controller.contentCon.value,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '내용',
+                        )),
                   )),
+                  const SizedBox(
+                    height: 5,
+                  ),
                 ],
+              )),
+              const SizedBox(
+                width: 20,
               ),
-            )
-          ],
-        ));
+              Expanded(
+                  child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints constraints) {
+                    return Obx(() => Container(
+                        width: constraints.maxWidth,
+                        height: 50,
+                        color: Colors.white,
+                        child: Text(controller.titleText.value,
+                            style: const TextStyle(
+                                fontSize: 20, color: Colors.black))));
+                  }),
+                  // Container(
+                  //     color: Colors.white,
+                  //     child: Text(
+                  //       controller.titleText.value,
+                  //     )),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints constraints) {
+                    return Obx(() => Container(
+                        width: constraints.maxWidth,
+                        height: 100,
+                        color: Colors.white,
+                        child: Text(controller.contentText.value,
+                            style: const TextStyle(
+                                fontSize: 20, color: Colors.black))));
+                  }),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                ],
+              )),
+            ],
+          ),
+        )
+      ],
+    );
   }
 }
 
@@ -118,4 +135,14 @@ class WriteNovelController extends GetxController {
 
   Rx<TextEditingController> titleCon = TextEditingController().obs;
   Rx<TextEditingController> contentCon = TextEditingController().obs;
+
+  updateTitleText(String value) {
+    titleText.value = value;
+    update();
+  }
+
+  updateContentText(String value) {
+    contentText.value = value;
+    update();
+  }
 }
