@@ -1,7 +1,8 @@
 import { Box, Button, Input, Modal, SimpleGrid, Stack, Text, Textarea } from '@chakra-ui/react'
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './TextAnimation.css';
 import { ShakeText } from './component/text/Shake';
+import { BoldText } from './component/text/Bold';
 
 const EFFECT_KEY = 'effect';
 
@@ -15,17 +16,27 @@ export const CreateNovel = () =>{
 
   const [textEffects, setTextEffects] = useState(new Map<string, Array<string>>());
 
-  const [isHover, setIsHover] = useState(false);
+  const [texts, setTexts] = useState(Array<any>);
 
   const contentInput = useRef(null);
 
   const setTitleText = (e: any) => {
     setTitle(e.target.value);
+    getTexts();
   }
 
   const setContentText = (e: any) => {
     setContent(e.target.value);
+    getTexts();
   }
+
+  const removeEffect = (key: string) => {
+    const effects = textEffects;
+    effects.delete(key);
+    setTextEffects(effects);
+
+    getTexts();
+  };
 
   const selectedContentText = (e: any) => {
     setSelectText(false);
@@ -52,8 +63,10 @@ export const CreateNovel = () =>{
     effects.push('bold');
 
     setTextEffects(textEffects.set(index, effects));
-    setTextEffects(new Map([...textEffects].sort()));
+    sortTextEffects();
     setSelectText(false);
+
+    getTexts();
   }
 
   const makeShake = () => {
@@ -72,8 +85,10 @@ export const CreateNovel = () =>{
     effects.push('shake');
 
     setTextEffects(textEffects.set(index, effects));
-    setTextEffects(new Map([...textEffects].sort()));
+    sortTextEffects();
     setSelectText(false);
+
+    getTexts();
   }
 
   const getTexts = () => {
@@ -87,28 +102,20 @@ export const CreateNovel = () =>{
       // TODO: 지금은 한 가지 효과만 적용
       switch(value[0]){
         case 'bold':
-          texts.push(<span onMouseEnter={effectMouseOver} key={key + EFFECT_KEY} className={value.join(' ')}>{content.slice(Number(startIndex), Number(endIndex))}</span>);
+          // texts.push(<span onMouseEnter={effectMouseOver} key={key + EFFECT_KEY} className={value.join(' ')}>{content.slice(Number(startIndex), Number(endIndex))}</span>);
+          texts.push(<BoldText key={key + EFFECT_KEY} text={content.slice(Number(startIndex), Number(endIndex))} removeEffect={() => removeEffect(key)} index={key} />);
           break;
         case 'shake':
-          texts.push(<ShakeText onMouseEnter={effectMouseOver} key={key + EFFECT_KEY} text={content.slice(Number(startIndex), Number(endIndex))} />);
+          texts.push(<ShakeText key={key + EFFECT_KEY} text={content.slice(Number(startIndex), Number(endIndex))} removeEffect={() => removeEffect(key)} index={key} />);
           break;
       }
-      texts.push(<span key={key + "button"}>{isHover && <Button onClick={() => cancelEffect(key)}>취소</Button>}</span>);
+      // texts.push(<span key={key + "button"}>{isHover && <Button onClick={() => cancelEffect(key)}>취소</Button>}</span>);
       index = Number(endIndex);
     }
     texts.push(<span key={index + 1}>{content.slice(index, content.length)}</span>);
-    return texts;
-  }
-
-  const effectMouseOver = () => {
-    setIsHover(true);
-  }
-
-  const cancelEffect = (key: string) => {
-    const effects = textEffects;
-    effects.delete(key);
-    setTextEffects(effects);
-    setIsHover(false);
+    console.log(texts);
+    // return texts;
+    setTexts(texts);
   }
 
   const isEffect = (startIndex: number, endIndex: number) => {
@@ -129,6 +136,20 @@ export const CreateNovel = () =>{
     return false;
   }
 
+  // TODO: 빨리 만들기
+  // 맵은 insert 순으로 들어가기 때문에 뒤에 문자를 먼저 
+  // 효과 먹이고 앞에 문자를 먹이면 태그가 증식하는 버그
+  const sortTextEffects = () => {
+    const indexArr = [];
+    for (const [key] of textEffects) {
+      const [startString] = key.split('-');
+      indexArr.push(Number(startString));
+    }
+    
+    const sortedTextEffects = new Map([...textEffects].sort());
+    setTextEffects(sortedTextEffects);
+  }
+
   return (
     <main style={{ padding: 10, width:'100vh' }}>
       <h1>소설 쓰기</h1>
@@ -145,7 +166,7 @@ export const CreateNovel = () =>{
           }
         </Stack>
         <Box>
-          {getTexts()}
+          {texts}
         </Box>
         {/* <ShakeText text={content}></ShakeText> */}
       </SimpleGrid> 

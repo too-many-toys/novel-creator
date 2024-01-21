@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { Button } from '@chakra-ui/react';
 
-export const ShakeText = ({
+export const BoldText = ({
   text,
   index,
   removeEffect,
@@ -14,7 +14,6 @@ export const ShakeText = ({
   const [isHover, setIsHover] = useState(false);
 
   const boxRef = useRef(null);
-  const range = 3;
 
   const effectMouseOver = () => {
     setIsHover(true);
@@ -25,25 +24,8 @@ export const ShakeText = ({
     setIsHover(false);
   };
 
-  useEffect(() => {
-    const box = boxRef.current;
-
-    const getRandomValue = (min: number, max: number) => {
-      return Math.random() * (max - min) + min;
-    };
-
-    gsap.to(box, {
-      x: () => range,
-      // y: () => getRandomValue(-range, range),
-      duration: 0.1,
-      repeat: -1,
-      yoyo: false,
-      // ease: "power1.inOut"
-    });
-  }, [isHover]);
-
   return (
-    <span ref={boxRef} style={{ display: 'inline-block' }} onMouseEnter={effectMouseOver}>
+    <span ref={boxRef} style={{ display: 'inline-block', fontWeight: 'bold' }} onMouseEnter={effectMouseOver}>
       {text}
       {isHover && <Button onClick={cancelEffect}>취소</Button>}
     </span>
