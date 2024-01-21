@@ -1,0 +1,74 @@
+/* .shake {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+} */
+
+/* @keyframes shake {
+    0% { transform: translateX(0); }
+    10% { transform: translateX(-10px) rotate(-5deg); }
+    20% { transform: translateX(10px) rotate(5deg); }
+    30% { transform: translateX(-10px) rotate(-5deg); }
+    40% { transform: translateX(10px) rotate(5deg); }
+    50% { transform: translateX(-10px) rotate(-5deg); }
+    60% { transform: translateX(10px) rotate(5deg); }
+    70% { transform: translateX(-10px) rotate(-5deg); }
+    80% { transform: translateX(10px) rotate(5deg); }
+    90% { transform: translateX(-10px) rotate(-5deg); }
+    100% { transform: translateX(0); }
+}
+
+.shake-effect {
+    animation: shake 0.8s infinite;
+} */
+
+/* @keyframes shake {
+    0% {
+      transform: translateX(-5px);
+    }
+    50% {
+      transform: translateX(5px);
+    }
+    100% {
+      transform: translateX(-5px);
+    }
+  }
+  
+  /* .shake {
+    animation: shake 0.1s infinite;
+  } */
+
+  @keyframes shake {
+    10%,
+    90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    20%,
+    80% {
+      transform: translate3d(2px, 0, 0);
+    }
+    30%,
+    50%,
+    70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+    40%,
+    60% {
+      transform: translate3d(4px, 0, 0);
+    }
+  }
+
+  .shake {
+    animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both infinite;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    display: inline-block;
+  }
+  
+
+
+.bold {
+    font-weight: bold;
+}
