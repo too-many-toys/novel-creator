@@ -14,8 +14,11 @@ import {
 import { IconInfoCircle } from '@tabler/icons-react';
 import { useState } from 'react';
 
+import { config } from '../../config';
+
 function Register() {
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [genres, setGenres] = useState<string | null>('');
 
@@ -39,11 +42,22 @@ function Register() {
             onChange={(event) => setTitle(event.currentTarget.value)}
           />
           <Space h="md" />
+          <TextInput
+            variant="filled"
+            radius="md"
+            size="md"
+            label="소설 설명"
+            placeholder="설명"
+            description="소설을 간단하게 설명해주세요!"
+            value={description}
+            onChange={(event) => setDescription(event.currentTarget.value)}
+          />
+          <Space h="md" />
           <TagsInput
             label="소설의 태그를 설정할 수 있어요"
             size="md"
             placeholder="여러 태그"
-            data={[]}
+            data={tags}
             value={tags}
             onChange={setTags}
           />
@@ -74,14 +88,28 @@ function Register() {
           <Space h="md" />
           <Center>
             <Group>
-                <Button variant="filled" color='pink'>블록체인에 올리기!</Button>
-                <Button variant="filled" color='green'>그냥 올리기!</Button>
+              <Button variant="filled" color="pink">
+                블록체인에 올리기!
+              </Button>
+              <Button
+                variant="filled"
+                color="green"
+                onClick={() => {
+                  registerNovel();
+                }}
+              >
+                그냥 올리기!
+              </Button>
             </Group>
           </Center>
         </SimpleGrid>
       </Center>
     </>
   );
+}
+
+function registerNovel() {
+  console.log(config.BASE_URL);
 }
 
 export default Register;
