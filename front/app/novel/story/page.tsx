@@ -1,11 +1,10 @@
+'use client';
+
 import { SimpleGrid, Text, TextInput, Textarea } from '@mantine/core';
 import { useState } from 'react';
 
-function CharacterRelations() {
-  return (
-    <>
-    </>
-  );
+function StoryRelations() {
+  return <></>;
 }
 
-export default CharacterRelations;
+export default StoryRelations;

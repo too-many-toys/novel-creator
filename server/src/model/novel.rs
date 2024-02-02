@@ -1,42 +1,48 @@
 use serde::{Deserialize, Serialize};
+use sqlx::FromRow;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, FromRow)]
+#[serde(rename_all = "camelCase")]
 pub struct NovelModel {
-  pub id: u32,
+  #[serde(skip_serializing_if = "Option::is_none")]
+  pub id: Option<i32>,
   pub title: String,
-  pub user_id: u32,
+  pub user_id: i32,
   pub description: String,
-  pub image_url: String,
-  pub created_at: chrono::DateTime<chrono::Utc>,
-  pub updated_at: chrono::DateTime<chrono::Utc>,
+  #[serde(skip_serializing_if = "Option::is_none")]
+  pub image_url: Option<String>,
+  #[serde(skip_serializing_if = "Option::is_none")]
+  pub created_at: Option<chrono::DateTime<chrono::Utc>>,
+  #[serde(skip_serializing_if = "Option::is_none")]
+  pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, FromRow)]
 pub struct GenreModel {
-  pub id: u32,
+  pub id: i32,
   pub genre: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, FromRow)]
 pub struct ChapterModel {
-  pub id: u32,
-  pub novel_id: u32,
+  pub id: i32,
+  pub novel_id: i32,
   pub title: String,
   pub content: String,
   pub created_at: String,
   pub updated_at: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, FromRow)]
 pub struct NovelTagModel {
-  pub id: u32,
-  pub novel_id: u32,
+  pub id: i32,
+  pub novel_id: i32,
   pub tag: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NovelGenreModel {
-  pub id: u32,
-  pub genre_id: u32,
-  pub novel_id: u32,
+  pub id: i32,
+  pub genre_id: i32,
+  pub novel_id: i32,
 }

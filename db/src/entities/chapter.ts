@@ -14,7 +14,7 @@ export class NovelChapter {
 
   @Index()
   @Column({ type: "int", nullable: false })
-  novelId: number;
+  novel_id: number;
 
   @Column({ type: "varchar", length: 255, nullable: false })
   title: string;
@@ -23,8 +23,8 @@ export class NovelChapter {
   content: string;
 
   @CreateDateColumn({ type: "timestamp", comment: "생성일" })
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn({ type: "timestamp", comment: "수정일" })
-  updatedAt: Date;
+  updated_at: Date;
 }

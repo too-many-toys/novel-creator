@@ -1,5 +1,6 @@
 use sqlx::mysql::MySqlPoolOptions;
 
+#[derive(Clone)]
 pub struct Db {
   pub pool: sqlx::Pool<sqlx::MySql>,
 }
@@ -9,8 +10,12 @@ impl Db {
     let pool = MySqlPoolOptions::new()
       .max_connections(5)
       .connect(&std::env::var("DB_HOST").unwrap())
-      .await
-      .unwrap();
+      .await;
+    let pool = if let Err(e) = pool {
+      panic!("Failed to connect to MySQL: {}", e);
+    } else {
+      pool.unwrap()
+    };
 
     Self { pool }
   }

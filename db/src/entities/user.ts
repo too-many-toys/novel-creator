@@ -16,7 +16,7 @@ export class User {
   name: string;
 
   @Column({ type: "varchar", length: 255, nullable: false })
-  penName: string;
+  pen_name: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
   intro: string;
@@ -30,11 +30,11 @@ export class User {
   email: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
-  walletAddress: string;
+  wallet_address: string;
 
   @CreateDateColumn({ type: "timestamp", comment: "생성일" })
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn({ type: "timestamp", comment: "수정일" })
-  updatedAt: Date;
+  updated_at: Date;
 }

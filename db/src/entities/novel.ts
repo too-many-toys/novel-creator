@@ -16,18 +16,18 @@ export class Novel {
   title: string;
 
   @Index()
-  @Column({ type: "varchar", length: 255, nullable: false })
-  userId: string;
+  @Column({ type: "int", nullable: false })
+  user_id: number;
 
   @Column({ type: "varchar", length: 255, nullable: false })
   description: string;
 
   @Column({ type: "varchar", length: 255, nullable: false })
-  imageUrl: string;
+  image_url: string;
 
   @CreateDateColumn({ type: "timestamp", comment: "생성일" })
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn({ type: "timestamp", comment: "수정일" })
-  updatedAt: Date;
+  updated_at: Date;
 }

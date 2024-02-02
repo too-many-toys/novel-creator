@@ -14,7 +14,7 @@ tower = "*"
 chrono = { version = "*", features = ["serde"] }
 tower-http = { version = "*", features = ["cors", "validate-request"] }
 serde_json = "*"
-sqlx = { version = "0.7", features = ["runtime-tokio", "mysql"] }
+sqlx = { version = "0.7", features = ["runtime-tokio", "mysql", "chrono"] }
 anyhow = "*"
 
 [profile.release]

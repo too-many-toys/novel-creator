@@ -6,9 +6,9 @@ export class NovelGenre {
   id: number;
 
   @Column({ type: "int", nullable: false })
-  genreId: number;
+  genre_id: number;
 
   @Index()
   @Column({ type: "int", nullable: false })
-  novelId: number;
+  novel_id: number;
 }

@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Center,
   SimpleGrid,
@@ -13,8 +15,16 @@ import {
 } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { useState } from 'react';
+import axios from 'axios';
 
 import { config } from '../../config';
+
+type CreateNovel = {
+  title: string;
+  description: string;
+  tags: string[];
+  genres: string | null;
+};
 
 function Register() {
   const [title, setTitle] = useState('');
@@ -95,7 +105,7 @@ function Register() {
                 variant="filled"
                 color="green"
                 onClick={() => {
-                  registerNovel();
+                  registerNovel({ title, description, tags, genres });
                 }}
               >
                 그냥 올리기!
@@ -108,8 +118,34 @@ function Register() {
   );
 }
 
-function registerNovel() {
-  console.log(config.BASE_URL);
+async function registerNovel(data: CreateNovel) {
+  await axios
+    .post(
+      `${config.BASE_URL}/novel/register`,
+      {
+        title: data.title,
+        description: data.description,
+        userId: 1,
+        tags: data.tags,
+        genres: data.genres,
+        imageUrl: 'https://via.placeholder.com/150',
+      },
+      {
+        headers: { 'Content-Type': 'application/json', Accept: '*/*' },
+      }
+    )
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error(error.response.data);
+    });
 }
+
+// await axios.post(
+//   `${config.BASE_URL}/novel/register`,
+//   { title: data.title, description: data.description },
+//   { 'Content-Type': 'application/json', Accept: '*/*' }
+// );
 
 export default Register;

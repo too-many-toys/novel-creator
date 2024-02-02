@@ -7,7 +7,7 @@ export class NovelTag {
 
   @Index()
   @Column({ type: "int", nullable: false })
-  novelId: number;
+  novel_id: number;
 
   @Index()
   @Column({ type: "varchar", length: 255, nullable: false })
