@@ -12,24 +12,24 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "varchar", length: 255, nullable: false })
+  @Column({ type: "varchar", length: 255, nullable: true })
   name: string;
 
-  @Column({ type: "varchar", length: 255, nullable: false })
+  @Column({ type: "varchar", length: 255, nullable: true })
   pen_name: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
   intro: string;
 
   // TODO: oauth 붙이면 nullable: false로 바꾸기
-  @Index()
   @Column({ type: "varchar", length: 255, nullable: true })
   uid: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
   email: string;
 
-  @Column({ type: "varchar", length: 255, nullable: true })
+  @Index({ unique: true })
+  @Column({ type: "varchar", length: 255, nullable: false })
   wallet_address: string;
 
   @CreateDateColumn({ type: "timestamp", comment: "생성일" })

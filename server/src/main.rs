@@ -13,8 +13,12 @@ async fn main() {
 
   let app = Router::new()
     .route("/health", get(health))
+    // NOVEL ROUTER
     .route("/novel/:id", get(handlers::novel::get_novel))
+    .route("/novels", get(handlers::novel::get_novels))
     .route("/novel/register", post(handlers::novel::create_novel))
+    // USER ROUTER
+    .route("/user/login", post(handlers::user::login))
     .layer(
       CorsLayer::new()
         .allow_origin(Any)
@@ -35,6 +39,7 @@ async fn health() -> &'static str {
   "ok"
 }
 
+#[allow(dead_code)]
 async fn shutdown_signal() {
   tokio::signal::ctrl_c()
     .await

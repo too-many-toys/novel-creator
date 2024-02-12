@@ -12,7 +12,8 @@ export class Novel {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "varchar", length: 255, nullable: false })
+  @Index({ unique: true })
+  @Column({ type: "varchar", length: 100, nullable: false })
   title: string;
 
   @Index()
@@ -22,7 +23,7 @@ export class Novel {
   @Column({ type: "varchar", length: 255, nullable: false })
   description: string;
 
-  @Column({ type: "varchar", length: 255, nullable: false })
+  @Column({ type: "varchar", length: 255, nullable: true })
   image_url: string;
 
   @CreateDateColumn({ type: "timestamp", comment: "생성일" })

@@ -17,6 +17,20 @@ pub struct NovelModel {
   pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
 }
 
+impl Default for NovelModel {
+  fn default() -> Self {
+    NovelModel {
+      id: None,
+      title: "".to_string(),
+      user_id: 0,
+      description: "".to_string(),
+      image_url: None,
+      created_at: None,
+      updated_at: None,
+    }
+  }
+}
+
 #[derive(Debug, Deserialize, Serialize, FromRow)]
 pub struct GenreModel {
   pub id: i32,

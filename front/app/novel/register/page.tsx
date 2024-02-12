@@ -12,12 +12,15 @@ import {
   Button,
   Blockquote,
   Group,
+  Dialog,
 } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import { config } from '../../config';
+import { useDisclosure } from '@mantine/hooks';
+import { useAccount, useSignMessage } from 'wagmi';
 
 type CreateNovel = {
   title: string;
@@ -27,12 +30,69 @@ type CreateNovel = {
 };
 
 function Register() {
+  const { address } = useAccount();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [genres, setGenres] = useState<string | null>('');
 
+  const [successDialogOpen, successHandler] = useDisclosure(false);
+  const [errorDialogOpen, errorHandler] = useDisclosure(false);
+  const [loginDialogOpen, loginHandler] = useDisclosure(false);
+  const [notSupportedDialogOpen, notSupportedHandler] = useDisclosure(false);
+
+  const { data: signMessageData, error, signMessage, variables } = useSignMessage();
+
   const icon = <IconInfoCircle />;
+
+  useEffect(() => {
+    (async () => {
+      if (variables?.message && signMessageData) {
+        console.log(signMessageData);
+      }
+    })();
+  }, [signMessageData, variables?.message]);
+
+  async function registerNovel(data: CreateNovel) {
+    if (!address) {
+      loginHandler.open();
+      return;
+    }
+
+    axios
+      .post(
+        `${config.BASE_URL}/novel/register`,
+        {
+          title: data.title,
+          description: data.description,
+          walletAddress: address,
+          tags: data.tags,
+          genres: data.genres,
+          // imageUrl: 'https://via.placeholder.com/150',
+        },
+        {
+          headers: { 'Content-Type': 'application/json', Accept: '*/*' },
+        }
+      )
+      .then(() => {
+        successHandler.open();
+      })
+      .catch((error) => {
+        console.error(error);
+        errorHandler.open();
+      });
+  }
+
+  async function registerNovelWithBlockchain(data: CreateNovel) {
+    notSupportedHandler.open();
+    return;
+    if (!address) {
+      loginHandler.open();
+      return;
+    }
+
+    signMessage({ message: 'Register Your Novel To Polygon' });
+  }
 
   return (
     <>
@@ -47,7 +107,7 @@ function Register() {
             size="md"
             label="소설 제목"
             placeholder="제목"
-            description="이 소설 제목은 작품 단위 입니다 (XXX가 귀환했다, X회차라 너무 쉬운 것 같습니다 등)"
+            description="소설 제목은 작품 단위 입니다 (XXX가 귀환했다, X회차라 너무 쉬운 것 같습니다 등)"
             value={title}
             onChange={(event) => setTitle(event.currentTarget.value)}
           />
@@ -98,7 +158,13 @@ function Register() {
           <Space h="md" />
           <Center>
             <Group>
-              <Button variant="filled" color="pink">
+              <Button
+                variant="filled"
+                color="pink"
+                onClick={() => {
+                  registerNovelWithBlockchain({ title, description, tags, genres });
+                }}
+              >
                 블록체인에 올리기!
               </Button>
               <Button
@@ -113,39 +179,57 @@ function Register() {
             </Group>
           </Center>
         </SimpleGrid>
+        <Group>
+          <Dialog
+            opened={successDialogOpen}
+            withCloseButton
+            onClose={successHandler.close}
+            size="lg"
+            radius="md"
+          >
+            <Text size="sm" mb="xs" fw={500}>
+              등록이 완료되었습니다!
+            </Text>
+          </Dialog>
+          <Dialog
+            opened={errorDialogOpen}
+            withCloseButton
+            onClose={errorHandler.close}
+            size="lg"
+            radius="md"
+          >
+            <Text size="sm" mb="xs" fw={500}>
+              에러가 발생했습니다!
+            </Text>
+          </Dialog>
+          <Dialog
+            opened={loginDialogOpen}
+            withCloseButton
+            onClose={loginHandler.close}
+            size="lg"
+            radius="md"
+          >
+            <Text size="sm" mb="xs" fw={500}>
+              메타마스크로 먼저 로그인을 해 주세요!
+            </Text>
+          </Dialog>
+          <Dialog
+            opened={notSupportedDialogOpen}
+            withCloseButton
+            onClose={notSupportedHandler.close}
+            size="lg"
+            radius="md"
+          >
+            <Text size="sm" mb="xs" fw={500}>
+              아직 지원하지 않는 기능입니다!
+              <br />
+              업데이트를 기다려주세요!
+            </Text>
+          </Dialog>
+        </Group>
       </Center>
     </>
   );
 }
-
-async function registerNovel(data: CreateNovel) {
-  await axios
-    .post(
-      `${config.BASE_URL}/novel/register`,
-      {
-        title: data.title,
-        description: data.description,
-        userId: 1,
-        tags: data.tags,
-        genres: data.genres,
-        imageUrl: 'https://via.placeholder.com/150',
-      },
-      {
-        headers: { 'Content-Type': 'application/json', Accept: '*/*' },
-      }
-    )
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error(error.response.data);
-    });
-}
-
-// await axios.post(
-//   `${config.BASE_URL}/novel/register`,
-//   { title: data.title, description: data.description },
-//   { 'Content-Type': 'application/json', Accept: '*/*' }
-// );
 
 export default Register;

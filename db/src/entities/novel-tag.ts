@@ -10,6 +10,6 @@ export class NovelTag {
   novel_id: number;
 
   @Index()
-  @Column({ type: "varchar", length: 255, nullable: false })
+  @Column({ type: "varchar", length: 30, nullable: false })
   tag: string;
 }
