@@ -3,20 +3,15 @@ use axum::{
   http::StatusCode,
 };
 
-#[derive(serde::Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct UserLoginPayload {
-  pub wallet_address: String,
-}
+use crate::{dto::user::UserLoginDto, utils::ValidatedJson};
 
 pub async fn login(
   State(app_state): State<crate::context::AppState>,
-  Json(payload): Json<UserLoginPayload>,
+  ValidatedJson(payload): ValidatedJson<UserLoginDto>,
 ) -> (StatusCode, Json<serde_json::Value>) {
-  tracing::info!("payload: {:?}", &payload);
   let user = app_state
     .user_repository
-    .find_one_by_wallet_address(app_state.db.get_pool(), &payload.wallet_address)
+    .find_one_by_wallet_address(app_state.db.get_pool(), &payload.uid)
     .await;
 
   if let Err(e) = user {
@@ -28,7 +23,7 @@ pub async fn login(
   if let None = user.unwrap() {
     let insert_result = app_state
       .user_repository
-      .insert_one_only_wallet_address(app_state.db.get_pool(), &payload.wallet_address)
+      .insert_one_only_wallet_address(app_state.db.get_pool(), &payload.uid)
       .await;
     if let Err(e) = insert_result {
       return (

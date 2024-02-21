@@ -19,6 +19,13 @@ import { WagmiProvider, http, createConfig } from 'wagmi';
 import { polygonMumbai } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ConnectWalletButton } from '@/components/Metamask/ConnectWalletButton';
+import { SessionProvider } from 'next-auth/react';
+
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
 
 const queryClient = new QueryClient();
 
@@ -73,7 +80,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <NavLink component={Link} href="/novel/character" label="Character Relations" />
                   <NavLink component={Link} href="/novel/story" label="Story Relations" />
                 </AppShell.Navbar>
-                <AppShell.Main>{children}</AppShell.Main>
+                <AppShell.Main>
+                  <SessionProvider>{children}</SessionProvider>
+                </AppShell.Main>
               </AppShell>
             </QueryClientProvider>
           </WagmiProvider>

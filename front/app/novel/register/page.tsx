@@ -17,10 +17,12 @@ import {
 import { IconInfoCircle } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Image } from '@mantine/core';
 
 import { config } from '../../config';
 import { useDisclosure } from '@mantine/hooks';
 import { useAccount, useSignMessage } from 'wagmi';
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 type CreateNovel = {
   title: string;
@@ -30,6 +32,7 @@ type CreateNovel = {
 };
 
 function Register() {
+  const { data: session } = useSession();
   const { address } = useAccount();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -41,6 +44,9 @@ function Register() {
   const [loginDialogOpen, loginHandler] = useDisclosure(false);
   const [notSupportedDialogOpen, notSupportedHandler] = useDisclosure(false);
 
+  const [register, setRegister] = useState(false);
+  const [registerWithBlockchain, setRegisterWithBlockchain] = useState(false);
+
   const { data: signMessageData, error, signMessage, variables } = useSignMessage();
 
   const icon = <IconInfoCircle />;
@@ -48,7 +54,15 @@ function Register() {
   useEffect(() => {
     (async () => {
       if (variables?.message && signMessageData) {
-        console.log(signMessageData);
+        console.log('signMessageData', signMessageData.length);
+        if (register) {
+          registerNovel({ title, description, tags, genres });
+          return;
+        }
+        if (registerWithBlockchain) {
+          registerNovelWithBlockchain({ title, description, tags, genres });
+          return;
+        }
       }
     })();
   }, [signMessageData, variables?.message]);
@@ -65,7 +79,7 @@ function Register() {
         {
           title: data.title,
           description: data.description,
-          walletAddress: address,
+          signature: signMessageData,
           tags: data.tags,
           genres: data.genres,
           // imageUrl: 'https://via.placeholder.com/150',
@@ -91,8 +105,33 @@ function Register() {
       return;
     }
 
-    signMessage({ message: 'Register Your Novel To Polygon' });
+    signMessage({ message: 'Register Your Novel To BlockChain' });
   }
+
+  function signMessageForRegister() {
+    signMessage({ message: 'Register Your Novel To BlockChain' });
+  }
+
+  if (!session) {
+    return (
+      <>
+        <Center>로그인이 필요한 서비스 입니다!</Center>
+        <br />
+        <Center>
+          <Image src="/kakao_login.png" alt="1" onClick={() => signIn('kakao')} />
+        </Center>
+      </>
+    );
+  }
+  // return (
+  //   <>
+  //     <Center>로그인</Center>
+  //     <br />
+  //     <Center>
+  //       <Image src="/kakao_login.png" alt="1" onClick={() => signOut()} />
+  //     </Center>
+  //   </>
+  // );
 
   return (
     <>
@@ -154,6 +193,8 @@ function Register() {
             소설을 등록할 때 "블록체인에 올리기"를 선택하면 소설을 등록할 때,
             <br />
             회차를 블록체인에 등록할 때 수수료가 필요합니다.
+            <br />
+            (아직 미지원)
           </Blockquote>
           <Space h="md" />
           <Center>
@@ -162,7 +203,8 @@ function Register() {
                 variant="filled"
                 color="pink"
                 onClick={() => {
-                  registerNovelWithBlockchain({ title, description, tags, genres });
+                  signMessageForRegister();
+                  setRegisterWithBlockchain(true);
                 }}
               >
                 블록체인에 올리기!
@@ -171,7 +213,8 @@ function Register() {
                 variant="filled"
                 color="green"
                 onClick={() => {
-                  registerNovel({ title, description, tags, genres });
+                  signMessageForRegister();
+                  setRegister(true);
                 }}
               >
                 그냥 올리기!

@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use axum::{
   body::Body,
-  extract::{rejection::FormRejection, FromRequest, Request},
+  extract::{rejection::JsonRejection, FromRequest, Request},
   Json,
 };
 use serde::de::DeserializeOwned;
@@ -17,7 +17,7 @@ impl<T, S> FromRequest<S> for ValidatedJson<T>
 where
   T: DeserializeOwned + Validate,
   S: Send + Sync,
-  Json<T>: FromRequest<S, Rejection = FormRejection>,
+  Json<T>: FromRequest<S, Rejection = JsonRejection>,
 {
   type Rejection = super::utils::error::ServerError;
 

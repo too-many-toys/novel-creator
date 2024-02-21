@@ -21,14 +21,13 @@ export class User {
   @Column({ type: "varchar", length: 255, nullable: true })
   intro: string;
 
-  // TODO: oauth 붙이면 nullable: false로 바꾸기
-  @Column({ type: "varchar", length: 255, nullable: true })
+  @Index({ unique: true })
+  @Column({ type: "varchar", length: 255, nullable: false })
   uid: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
   email: string;
 
-  @Index({ unique: true })
   @Column({ type: "varchar", length: 255, nullable: false })
   wallet_address: string;
 

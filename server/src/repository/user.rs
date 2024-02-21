@@ -75,6 +75,40 @@ impl UserRepository {
       }));
     }
   }
+
+  pub async fn find_one_by_uid(
+    &self,
+    pool: &sqlx::Pool<sqlx::MySql>,
+    uid: &String,
+  ) -> Result<Option<UserModel>, sqlx::Error> {
+    let user = query_as::<_, UserModel>(r#"SELECT * FROM user WHERE uid = ?"#)
+      .bind(uid)
+      .fetch_optional(pool)
+      .await;
+    let user = if let Err(e) = user {
+      // TODO: 에러 매핑
+      return Err(e);
+    } else {
+      user.unwrap()
+    };
+
+    if user.is_none() {
+      return Ok(None);
+    } else {
+      let user = user.unwrap();
+      return Ok(Some(UserModel {
+        id: user.id,
+        name: user.name,
+        pen_name: user.pen_name,
+        intro: user.intro,
+        uid: user.uid,
+        email: user.email,
+        wallet_address: user.wallet_address,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
+      }));
+    }
+  }
 }
 
 impl UserRepository {
